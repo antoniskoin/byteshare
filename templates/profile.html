@@ -16,15 +16,25 @@
                 <img src="../static/logo.svg" alt="logo" width="35" class="d-inline-block align-text-center img-fluid">
                 ByteShare
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="/" class="btn btn-primary shadow p-2" aria-current="page">Dashboard</a>
+                        <a class="nav-link" aria-current="page" href="/">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/" class="btn btn-primary shadow ms-3 p-2" aria-current="page">Share File</a>
+                        <a class="nav-link" href="/upload_file">Share File</a>
                     </li>
                 </ul>
+
+                <div class="navbar-nav ms-auto">
+                    <div class="btn-group p-2">
+                        <a href="/profile" class="btn btn-success shadow border border-2" aria-current="page">Profile</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
