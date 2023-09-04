@@ -1,6 +1,6 @@
 import pathlib
 from urllib.parse import urlparse
-
+from waitress import serve
 import bcrypt
 import pymongo
 from bson import ObjectId
@@ -19,6 +19,14 @@ records = database.get_collection(config["storage_collection"])
 
 
 @app.route("/")
+def index():
+    if "username" in session:
+        return redirect(url_for("dashboard"))
+
+    return render_template("index.html")
+
+
+@app.route("/dashboard")
 def dashboard():
     if "username" in session:
         shared_files = records.find({})
@@ -68,8 +76,9 @@ def share_page(file_id):
     filename = file["filename"]
     size = round(len(file["file"]) / 1048576, 2)
     extension = file["extension"]
+    uploaded_by = file["uploaded_by"]
     data = {"filename": filename, "size": size, "extension": extension, "file_id": file_id}
-    return render_template("download.html", file=data)
+    return render_template("download.html", file=data, uploaded_by=uploaded_by)
 
 
 @app.route("/download/<file_id>")
@@ -118,6 +127,7 @@ def upload():
             "file": binary_file,
             "filename": filename,
             "extension": extension,
+            "uploaded_by": session["username"]
         }
         result = records.insert_one(data)
         if result.acknowledged:
@@ -140,6 +150,9 @@ def upload():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if "username" in session:
+        return redirect(url_for("dashboard"))
+
     if request.method == "GET":
         return render_template("register.html")
     else:
@@ -173,6 +186,9 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "username" in session:
+        return redirect(url_for("dashboard"))
+
     if request.method == "GET":
         return render_template("login.html")
     else:
@@ -215,4 +231,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run()
+    serve(app)

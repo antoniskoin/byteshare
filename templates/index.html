@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ByteShare - Profile</title>
+    <title>ByteShare</title>
     <link rel="icon" type="image/x-icon" href="/static/logo.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -24,34 +24,20 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/upload_file">Share File</a>
-                    </li>
-                </ul>
-
-                <div class="navbar-nav ms-auto">
-                    <div class="btn-group p-2">
-                        <a href="/profile" class="btn btn-success shadow border border-2"
-                           aria-current="page">Profile</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </nav>
 </div>
 
-<div class="container-fluid d-flex justify-content-center pt-5">
-    <div class="card bg-dark text-light shadow" style="width: 18rem;">
-        <img src="data:image/svg+xml;base64,{{ account_data.profile_image }}" class="card-img-top" alt="Profile Image">
-        <div class="card-body text-center">
-            <h5 class="card-title">{{ account_data.username }}</h5>
-            <hr>
-            <a href="/logout" class="btn btn-danger shadow">Logout</a>
+<div class="container-fluid align-middle">
+    <div class="container px-4 py-5 my-5 text-center bg-dark rounded-3">
+        <img class="d-block mx-auto mb-4" src="/static/logo.svg" alt="" width="100px">
+        <h1 class="display-5 fw-bold text-light">ByteShare</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4 text-light">A file sharing application written in Python and Flask</p>
+            <div class="btn-group btn-group-lg" role="group">
+                <a href="/login" type="button" class="btn btn-outline-primary" role="button">Login</a>
+                <a href="/register" type="button" class="btn btn-outline-success">Register</a>
+            </div>
         </div>
     </div>
 </div>

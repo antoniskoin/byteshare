@@ -37,7 +37,7 @@
                     <li class="list-group-item"><strong>Filename:</strong> {{ file.filename }}</li>
                     <li class="list-group-item"><strong>Extension:</strong> {{ file.extension }}</li>
                     <li class="list-group-item"><strong>Size:</strong> {{ file.size }} MB</li>
-                    <li class="list-group-item"><strong>Uploaded by:</strong></li>
+                    <li class="list-group-item"><strong>Uploaded by:</strong> {{ uploaded_by }}</li>
                 </ul>
             </div>
             <div class="container-fluid d-flex justify-content-center pt-3">
@@ -46,6 +46,10 @@
         </div>
     </div>
 </div>
+
+<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow">
+    ByteShare &#169; 2023
+</footer>
 
 </body>
 </html>

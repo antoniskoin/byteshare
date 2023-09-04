@@ -94,7 +94,6 @@
                                     share link</a></li>
                                 <li><a class="dropdown-item" type="button"
                                        onclick="generateQrCode('{{ file.file_url }}')">Get QR Code</a></li>
-                                <li><a class="dropdown-item" href="#">View visit count</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -111,7 +110,7 @@
     </div>
 </div>
 {% else %}
-<div class="container-fluid d-flex justify-content-center">
+<div class="container-fluid d-flex justify-content-center pt-4">
     <div class="container bg-dark rounded shadow">
         <div class="card bg-dark border border-0">
             <div class="card-body">
@@ -147,15 +146,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="share_title">Share Link</h1>
+                <h1 class="modal-title fs-5" id="share_title">Share URL</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid d-flex justify-content-center">
                     <div class="input-group mb-3 shadow">
-                        <input type="text" class="form-control" placeholder="Share URL" aria-describedby="button-addon2"
+                        <input type="text" class="form-control" placeholder="Share URL"
+                               aria-describedby="button-addon2"
                                id="share_url">
-                        <button class="btn btn-dark" type="button" id="button-addon2">Copy</button>
+                        <button class="btn btn-dark" type="button" id="button-addon2" onclick="copyShareToClipboard()">
+                            Copy
+                        </button>
                     </div>
                 </div>
             </div>
@@ -186,10 +188,15 @@
     }
 
     function getShareUrl(url) {
-        let qrModal = new bootstrap.Modal(document.getElementById("share_link_modal"));
-        let qrSource = document.getElementById("share_url");
-        qrSource.value = url;
-        qrModal.show();
+        let shareModal = new bootstrap.Modal(document.getElementById("share_link_modal"));
+        let shareNoDirect = document.getElementById("share_url");
+        shareNoDirect.value = url;
+        shareModal.show();
+    }
+
+    function copyShareToClipboard() {
+        let shareUrl = document.getElementById("share_url").value;
+        navigator.clipboard.writeText(shareUrl)
     }
 </script>
 </body>
