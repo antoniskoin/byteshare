@@ -22,7 +22,8 @@
                         <a href="/" class="btn btn-primary shadow p-2 border border-2" aria-current="page">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/" class="btn btn-primary shadow ms-3 p-2" aria-current="page">Share File</a>
+                        <a href="/upload_file" class="btn btn-primary shadow ms-3 p-2" aria-current="page">Share
+                            File</a>
                     </li>
                 </ul>
             </div>
@@ -35,30 +36,50 @@
     </nav>
 </div>
 
-<div class="container pt-3">
-    {% if files %}
-    <div class="container-fluid d-flex justify-content-center bg-dark rounded">
-        <div class="container m-3 rounded">
-            <div class="container-fluid d-flex justify-content-center">
-                <h4 class="text-light">Your shared files</h4>
-            </div>
-            <ul class="list-group pt-3">
-                {% for file in files %}
-                <li class="list-group-item d-flex justify-content-between align-items-center m-1">
-                    <div class="d-inline">
-                        <div class="badge bg-dark me-1 p-2 shadow">{{ file.title }}</div>
-                        <div class="badge bg-primary p-2 me-1 ms-1 shadow">{{ file.filename }}</div>
-                        <div class="badge bg-primary p-2 shadow">{{ file.extension }}</div>
-                    </div>
-                    <div>
-                        <div class="btn-group">
+{% if files %}
+<div class="container-fluid d-flex justify-content-center pt-4">
+    <div class="container bg-dark rounded shadow">
+        <div class="container-fluid d-flex justify-content-center pt-4 pb-3">
+            <h4 class="text-light">Your shared files</h4>
+        </div>
+
+        <div class="accordion rounded pb-3 ps-2 pe-2" id="accordionExample">
+            {% for file in files %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        {{ file.title }}
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                     data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <ul class="list-group shadow">
+                            <li class="list-group-item">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text bg-dark text-light">Filename</span>
+                                    <input type="text" class="form-control" value="{{ file.filename }}">
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text bg-dark text-light">Extension</span>
+                                    <input type="text" class="form-control" value="{{ file.extension }}">
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="btn-group pt-3 shadow">
                             <button type="button" class="btn btn-success dropdown-toggle shadow"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 Action
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" type="button" onclick="getShareUrl('{{ file.file_url }}')">Get
+                                <li><a class="dropdown-item" type="button"
+                                       onclick="getShareUrl('{{ file.file_url }}')">Get
                                     share link</a></li>
                                 <li><a class="dropdown-item" type="button"
                                        onclick="generateQrCode('{{ file.file_url }}')">Get QR Code</a></li>
@@ -66,47 +87,34 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="/delete?id={{ file.file_id }}">Delete shared file</a>
+                                <li><a class="dropdown-item" href="/delete?id={{ file.file_id }}">Delete shared
+                                    file</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-    {% else %}
-    <div class="container-fluid d-flex justify-content-center bg-dark rounded shadow">
-        <div class="container-fluid d-flex justify-content-center mt-3 mb-3">
-            <div class="card bg-dark border border-0">
-                <div class="card-body">
-                    <div class="container-fluid d-flex justify-content-center mt-5 mb-5">
-                        <img src="../static/void.svg" width="256px" alt="No files currently being shared">
-                    </div>
-                    <div class="container-fluid d-flex justify-content-center mt-5 mb-5">
-                        <h4 class="text-light">You don't have any active files being shared.</h4>
-                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
-    {% endif %}
 </div>
-
-<div class="container pt-3 pb-3">
-    <div class="container-fluid d-flex justify-content-center bg-dark rounded shadow">
-        <div class="container-fluid d-flex justify-content-center mt-3 mb-3">
-            <div class="card bg-dark border border-0">
-                <div class="card-body">
-                    <div class="container-fluid d-flex justify-content-center mt-5 mb-5">
-                        <h5 class="text-light">Your archived files will appear here.</h5>
-                    </div>
+{% else %}
+<div class="container-fluid d-flex justify-content-center">
+    <div class="container bg-dark rounded shadow">
+        <div class="card bg-dark border border-0">
+            <div class="card-body">
+                <div class="container-fluid d-flex justify-content-center mt-5 mb-5">
+                    <img src="../static/void.svg" width="256px" alt="No files currently being shared">
+                </div>
+                <div class="container-fluid d-flex justify-content-center mt-5 mb-5">
+                    <h4 class="text-light">You don't have any active files being shared.</h4>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 
 <div class="modal" tabindex="-1" id="qrModal">
     <div class="modal-dialog">

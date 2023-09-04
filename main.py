@@ -1,4 +1,5 @@
 import pathlib
+from urllib.parse import urlparse
 
 import bcrypt
 import pymongo
@@ -27,7 +28,8 @@ def dashboard():
             filename = shared_file["filename"]
             extension = shared_file["extension"]
             file_id = shared_file["_id"]
-            file_url = f"http://127.0.0.1/share/{file_id}"
+            parsed_url = urlparse(request.base_url)
+            file_url = f"{parsed_url.scheme}://{parsed_url.hostname}/share/{file_id}"
             files.append({
                 "file_id": file_id,
                 "title": title,
