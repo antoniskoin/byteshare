@@ -46,21 +46,24 @@
 {% if files %}
 <div class="container-fluid d-flex justify-content-center pt-4">
     <div class="container bg-dark rounded shadow">
+        <div class="container-fluid d-flex justify-content-center pt-4">
+            <img src="../static/shared.svg" width="64" alt="upload file">
+        </div>
         <div class="container-fluid d-flex justify-content-center pt-4 pb-3">
             <h4 class="text-light">Your shared files</h4>
         </div>
-
+        <hr class="text-light">
         <div class="accordion rounded pb-3 ps-2 pe-2" id="accordionExample">
             {% for file in files %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne"
+                            data-bs-target="#collapse_{{ file.file_id }}"
                             aria-expanded="true" aria-controls="collapseOne">
                         {{ file.title }}
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                <div id="collapse_{{ file.file_id }}" class="accordion-collapse collapse" aria-labelledby="headingOne"
                      data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <ul class="list-group shadow">
