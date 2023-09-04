@@ -1,14 +1,16 @@
 import pathlib
 
+import bcrypt
 import pymongo
 from bson import ObjectId
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, redirect, url_for, make_response, session
 
 from configuration import load_config
 from helpers.account import is_strong_password, generate_profile_image, hash_password
 
 app = Flask(__name__)
 config = load_config()
+app.secret_key = config["secret_key"]
 uri = f"mongodb+srv://{config['username']}:{config['password']}@cluster0.stl7rpk.mongodb.net/?retryWrites=true&w=majority"
 client = pymongo.MongoClient(uri)
 database = client.get_database(config["database"])
@@ -17,36 +19,45 @@ records = database.get_collection(config["storage_collection"])
 
 @app.route("/")
 def dashboard():
-    shared_files = records.find({})
-    files = []
-    for shared_file in shared_files:
-        title = shared_file["title"]
-        filename = shared_file["filename"]
-        extension = shared_file["extension"]
-        file_id = shared_file["_id"]
-        file_url = f"http://127.0.0.1/share/{file_id}"
-        files.append({
-            "file_id": file_id,
-            "title": title,
-            "filename": filename,
-            "extension": extension,
-            "file_url": file_url
-        })
+    if "username" in session:
+        shared_files = records.find({})
+        files = []
+        for shared_file in shared_files:
+            title = shared_file["title"]
+            filename = shared_file["filename"]
+            extension = shared_file["extension"]
+            file_id = shared_file["_id"]
+            file_url = f"http://127.0.0.1/share/{file_id}"
+            files.append({
+                "file_id": file_id,
+                "title": title,
+                "filename": filename,
+                "extension": extension,
+                "file_url": file_url
+            })
 
-    return render_template("dashboard.html", files=files)
+        return render_template("dashboard.html", files=files)
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/upload_file")
 def upload_file():
-    return render_template("file_share.html")
+    if "username" in session:
+        return render_template("file_share.html")
+
+    return redirect(url_for("login"))
 
 
 @app.route("/delete", methods=["GET"])
 def delete_file():
-    if request.method == "GET":
-        file_id = request.args.get("id")
-        records.delete_one({"_id": ObjectId(file_id)})
-    return redirect(url_for("dashboard"))
+    if "username" in session:
+        if request.method == "GET":
+            file_id = request.args.get("id")
+            records.delete_one({"_id": ObjectId(file_id)})
+        return redirect(url_for("dashboard"))
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/share/<file_id>")
@@ -71,6 +82,9 @@ def download_file(file_id):
 
 @app.route("/upload", methods=["POST"])
 def upload():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
     if request.method == "POST":
         share_title = request.form.get("share_title")
         submitted_file = request.files.get("file")
@@ -155,9 +169,47 @@ def register():
             return render_template("register.html", message=message)
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == "GET":
+        return render_template("login.html")
+    else:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        accounts = database.get_collection(config["account_collection"])
+        account = accounts.find_one({"username": username})
+        if not account:
+            message = "This user doesn't exist."
+            return render_template("login.html", message=message)
+
+        remote_password = account["password"]
+        if bcrypt.checkpw(password.encode("utf-8"), remote_password):
+            session["username"] = account["username"]
+            return redirect(url_for("dashboard"))
+        else:
+            message = "Wrong password. Please try again."
+            return render_template("login.html", message=message)
+
+
+@app.route("/profile")
+def profile():
+    if "username" in session:
+        username = session["username"]
+        accounts = database.get_collection(config["account_collection"])
+        account = accounts.find_one({"username": username})
+        profile_image = account["profile_image"].decode()
+        account_data = {"username": username, "profile_image": profile_image}
+        return render_template("profile.html", account_data=account_data)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    if "username" in session:
+        session.pop("email", None)
+        session.pop("username", None)
+        return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
