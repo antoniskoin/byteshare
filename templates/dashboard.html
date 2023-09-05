@@ -93,7 +93,8 @@
                                        onclick="getShareUrl('{{ file.file_url }}')">Get
                                     share link</a></li>
                                 <li><a class="dropdown-item" type="button"
-                                       onclick="generateQrCode('{{ file.file_url }}')">Get QR Code</a></li>
+                                       onclick="generateQrCode('{{ file.file_url }}', '{{ file.file_id }}')">Get QR
+                                    Code</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -142,6 +143,9 @@
 
                 </div>
             </div>
+            <div class="modal-footer">
+                <a type="button" id="download_qr" class="btn btn-primary shadow" role="button" aria-disabled="true">Download</a>
+            </div>
         </div>
     </div>
 </div>
@@ -177,12 +181,22 @@
         integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="application/javascript">
-    function generateQrCode(text) {
+    function generateQrCode(text, qr_id) {
         let qrModal = new bootstrap.Modal(document.getElementById("qrModal"));
         let placeholder = document.getElementById("qr_code");
         removeAllChildNodes(placeholder);
-        new QRCode(placeholder, text);
+        new QRCode("qr_code", text);
         qrModal.show();
+
+        setTimeout(() => {
+            let downloadButton = document.getElementById("download_qr");
+            let qrCode = document.getElementById("qr_code");
+            let qrImage = qrCode.getElementsByTagName("img")[0];
+            let imgSrc = qrImage.getAttribute("src");
+            downloadButton.setAttribute("href", imgSrc);
+            downloadButton.setAttribute("download", "qr_code_" + qr_id + ".png")
+            downloadButton.enabled = true;
+        }, 1000);
     }
 
     function removeAllChildNodes(parent) {
