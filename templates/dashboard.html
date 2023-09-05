@@ -81,10 +81,16 @@
                                     <input type="text" class="form-control" value="{{ file.extension }}" readonly>
                                 </div>
                             </li>
+                            <li class="list-group-item">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text bg-dark text-light">Views</span>
+                                    <input type="text" class="form-control" value="{{ file.views }}" readonly>
+                                </div>
+                            </li>
                         </ul>
 
                         <div class="btn-group pt-3 shadow">
-                            <button type="button" class="btn btn-success dropdown-toggle shadow"
+                            <button type="button" class="btn btn-primary dropdown-toggle shadow"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 Action

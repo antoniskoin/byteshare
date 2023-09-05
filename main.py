@@ -38,12 +38,14 @@ def dashboard():
             file_id = shared_file["_id"]
             parsed_url = urlparse(request.base_url)
             file_url = f"{parsed_url.scheme}://{parsed_url.hostname}/share/{file_id}"
+            views = shared_file["views"]
             files.append({
                 "file_id": file_id,
                 "title": title,
                 "filename": filename,
                 "extension": extension,
-                "file_url": file_url
+                "file_url": file_url,
+                "views": views
             })
 
         return render_template("dashboard.html", files=files)
@@ -127,7 +129,8 @@ def upload():
             "file": binary_file,
             "filename": filename,
             "extension": extension,
-            "uploaded_by": session["username"]
+            "uploaded_by": session["username"],
+            "views": 0
         }
         result = records.insert_one(data)
         if result.acknowledged:
@@ -228,6 +231,21 @@ def logout():
         session.pop("email", None)
         session.pop("username", None)
         return redirect(url_for("login"))
+
+
+@app.route("/count", methods=["POST"])
+def count_views():
+    try:
+        object_id = request.json
+        object_id = object_id["objectId"]
+        object_id = ObjectId(object_id)
+        file = records.find_one({"_id": object_id})
+        views = int(file["views"]) + 1
+        records.update_one({"_id": object_id}, {"$set": {"views": views}})
+        return {"success": True}
+    except Exception as error:
+        print(error)
+        return {"success": False}
 
 
 if __name__ == "__main__":
