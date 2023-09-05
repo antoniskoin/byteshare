@@ -20,3 +20,6 @@ A file sharing application written in Python and Flask.
 
 ### Shared File
 ![File Share](/static/github_assets/shared_file.png)
+
+### QR Code
+![QR Code](/static/github_assets/qr.png)
