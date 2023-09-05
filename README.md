@@ -9,6 +9,12 @@
 ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
 A file sharing application written in Python and Flask.
+Features:
+- Share via link and QR Code
+- Simple account system (with profiles)
+- Upload any type of file (5MB limit)
+- Admin dashboard
+- PDF Preview **(currently works only on desktop)**
 
 ## Screenshots
 
@@ -23,3 +29,6 @@ A file sharing application written in Python and Flask.
 
 ### QR Code
 ![QR Code](/static/github_assets/qr.png)
+
+### Preview PDF
+![QR Code](/static/github_assets/pdf_preview.png)
