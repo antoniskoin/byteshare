@@ -8,7 +8,7 @@ from helpers.strings import encode_base64
 
 def is_strong_password(password: str) -> bool:
     password_size = len(password)  # CHECK PASSWORD SIZE
-    if password_size >= 8:
+    if 8 <= password_size <= 20:
         has_letters = any(char.isalpha() for char in password)
         has_numbers = any(char.isdigit() for char in password)
         has_special_characters = any(not char.isalnum() for char in password)
