@@ -63,6 +63,11 @@
                             data-bs-target="#collapse_{{ file.file_id }}"
                             aria-expanded="true" aria-controls="collapseOne">
                         {{ file.title }}
+
+                        {% if file.is_protected %}
+                        <img src="../static/lock.svg" width="24px" class="ms-2" alt="Password Protected"
+                             data-bs-toggle="tooltip" title="This file is password protected."/>
+                        {% endif %}
                     </button>
                 </h2>
                 <div id="collapse_{{ file.file_id }}" class="accordion-collapse collapse" aria-labelledby="headingOne"

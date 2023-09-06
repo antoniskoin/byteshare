@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 
 from configuration import load_config
 from helpers.account import is_strong_password, generate_profile_image, hash_password
+from helpers.strings import generate_id
 
 app = Flask(__name__)
 config = load_config()
@@ -39,13 +40,19 @@ def dashboard():
             parsed_url = urlparse(request.base_url)
             file_url = f"{parsed_url.scheme}://{parsed_url.hostname}/share/{file_id}"
             views = shared_file["views"]
+            password = shared_file["password"]
+            is_protected = False
+            if password:
+                is_protected = True
+
             files.append({
                 "file_id": file_id,
                 "title": title,
                 "filename": filename,
                 "extension": extension,
                 "file_url": file_url,
-                "views": views
+                "views": views,
+                "is_protected": is_protected
             })
 
         return render_template("dashboard.html", files=files)
@@ -75,16 +82,57 @@ def delete_file():
 @app.route("/share/<file_id>")
 def share_page(file_id):
     file = records.find_one({"_id": ObjectId(file_id)})
+
+    file_password = file["password"]
+    is_protected = False
+    if file_password:
+        is_protected = True
+
     filename = file["filename"]
     size = round(len(file["file"]) / 1048576, 2)
     extension = file["extension"]
     uploaded_by = file["uploaded_by"]
     data = {"filename": filename, "size": size, "extension": extension, "file_id": file_id}
-    return render_template("download.html", file=data, uploaded_by=uploaded_by)
+    return render_template("download.html", file=data, uploaded_by=uploaded_by,
+                           is_protected=is_protected)
+
+
+@app.route("/check")
+def check_password():
+    password = request.args.get("password", None)
+    file_id = request.args.get("file_id")
+    file = records.find_one({"_id": ObjectId(file_id)})
+    if not bcrypt.checkpw(password.encode("utf-8"), file["password"]):
+        return {"password_matches": False, "download_id": None}
+
+    download_id = generate_id()
+    download_ids = database.get_collection(config["download_ids"])
+    download_ids.insert_one({"download_id": download_id})
+
+    return {"password_matches": True, "download_id": download_id}
 
 
 @app.route("/download/<file_id>")
 def download_file(file_id):
+    is_protected = request.args.get("is_protected", 0)
+    download_id = request.args.get("download_id", None)
+
+    try:
+        is_protected = bool(int(is_protected))
+    except ValueError:
+        return {"error": "An unknown error occurred."}
+
+    if is_protected:
+        if not download_id:
+            return {"error": "A download ID is required to download a password protected file."}
+
+        download_ids = database.get_collection(config["download_ids"])
+        download_id_exists = download_ids.find_one({"download_id": download_id})
+        if not download_id_exists:
+            return {"error": "Download ID couldn't be found. Please try again."}
+
+        download_ids.delete_one({"download_id": download_id})
+
     file = records.find_one({"_id": ObjectId(file_id)})
     file_binary = file["file"]
     filename = file["filename"]
@@ -101,6 +149,16 @@ def upload():
     if request.method == "POST":
         share_title = request.form.get("share_title")
         submitted_file = request.files.get("file")
+        file_password = request.form.get("password")
+
+        if len(file_password) < 8 or len(file_password) > 20:
+            message = {
+                "status": "danger",
+                "icon": "error",
+                "message": "The file password must be between 8 - 20 characters.",
+                "success": False
+            }
+            return render_template("file_share_result.html", message=message)
 
         if submitted_file.filename == "":
             message = {
@@ -130,8 +188,13 @@ def upload():
             "filename": filename,
             "extension": extension,
             "uploaded_by": session["username"],
-            "views": 0
+            "views": 0,
+            "password": "",
         }
+
+        if file_password:
+            data["password"] = hash_password(file_password)
+
         result = records.insert_one(data)
         if result.acknowledged:
             message = {
