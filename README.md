@@ -15,6 +15,7 @@ Features:
 - Upload any type of file (5MB limit)
 - Admin dashboard
 - PDF Preview **(currently works only on desktop)**
+- File Password Protection
 
 ## Screenshots
 
