@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
+    <script src="../static/js/password.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -68,6 +69,15 @@
                 </div>
                 <div class="form-text text-light">
                     The maximum file size is 5MB.
+                </div>
+                <hr class="text-light">
+                <div class="container-fluid border border-2 rounded p-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input shadow" type="checkbox" role="switch"
+                               id="flexSwitchCheckDefault" onchange="isSwitchChecked(this, 'password')">
+                        <label class="form-check-label text-light" for="flexSwitchCheckDefault">Password Protect File</label>
+                    </div>
+                    <input type="password" class="form-control mt-3 shadow" placeholder="Password" name="password" id="password" hidden>
                 </div>
                 <button class="btn btn-primary mt-3 shadow" type="submit" id="submit-button">Submit
                 </button>

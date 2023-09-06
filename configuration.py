@@ -9,9 +9,11 @@ def load_config() -> dict:
     database = config.get("DATABASE", "DATABASE")
     storage_collection = config.get("DATABASE", "STORAGE_COLLECTION")
     account_collection = config.get("DATABASE", "ACCOUNT_COLLECTION")
+    download_ids = config.get("DATABASE", "DOWNLOAD_IDS_COLLECTION")
     secret_key = config.get("APP", "SECRET_KEY")
     config = {"username": username, "password": password, "database": database,
               "storage_collection": storage_collection,
               "account_collection": account_collection,
+              "download_ids": download_ids,
               "secret_key": secret_key}
     return config

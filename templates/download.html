@@ -11,6 +11,7 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
     <script src="../static/js/pdf.js"></script>
+    <script src="../static/js/password.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -45,6 +46,12 @@
                 </ul>
             </div>
 
+            {% if is_protected %}
+            <div class="container-fluid d-flex justify-content-center pt-3">
+                <a type="button" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#passwordModal">Unlock
+                    Download</a>
+            </div>
+            {% else %}
             <div class="container-fluid d-flex justify-content-center pt-3">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a type="button" class="btn btn-primary shadow"
@@ -55,6 +62,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -63,8 +71,30 @@
     ByteShare &#169; 2023
 </footer>
 
+<div class="modal fade" id="passwordModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">File Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a role="button" class="btn btn-primary shadow" id="passwordBtn" onclick="checkPassword('{{ file.file_id }}')">Unlock</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% if file.extension.lower() == ".pdf" %}
-<div class="modal" id="pdfModal" tabindex="-1">
+<div class="modal fade" id="pdfModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,8 +118,12 @@
 </script>
 
 <script type="application/javascript">
+
+</script>
+
+<script type="application/javascript">
     function loadPreviewModal() {
-        let pdfModal = new bootstrap.Modal(document.getElementById("pdfModal"));
+        let pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
         pdfModal.show();
     }
 </script>
