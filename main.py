@@ -149,16 +149,17 @@ def upload():
     if request.method == "POST":
         share_title = request.form.get("share_title")
         submitted_file = request.files.get("file")
-        file_password = request.form.get("password")
+        file_password = request.form.get("password", None)
 
-        if len(file_password) < 8 or len(file_password) > 20:
-            message = {
-                "status": "danger",
-                "icon": "error",
-                "message": "The file password must be between 8 - 20 characters.",
-                "success": False
-            }
-            return render_template("file_share_result.html", message=message)
+        if file_password:
+            if len(file_password) < 8 or len(file_password) > 20:
+                message = {
+                    "status": "danger",
+                    "icon": "error",
+                    "message": "The file password must be between 8 - 20 characters.",
+                    "success": False
+                }
+                return render_template("file_share_result.html", message=message)
 
         if submitted_file.filename == "":
             message = {
