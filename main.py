@@ -292,7 +292,6 @@ def profile():
 @app.route("/logout")
 def logout():
     if "username" in session:
-        session.pop("email", None)
         session.pop("username", None)
         return redirect(url_for("login"))
 
@@ -310,6 +309,20 @@ def count_views():
     except Exception as error:
         print(error)
         return {"success": False}
+
+
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    data = request.json
+    username = data["username"]
+    records.delete_many({"username": username})
+    accounts = database.get_collection(config["account_collection"])
+    account = accounts.delete_one({"username": username})
+    if account.acknowledged:
+        session.pop("username", None)
+        return {"result": True}
+    else:
+        return {"result": False}
 
 
 if __name__ == "__main__":

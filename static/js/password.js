@@ -14,7 +14,7 @@ function checkPassword(fileId) {
     }
 
     fetch("https://byteshare.vercel.app/check?password=" + password_value + "&file_id=" + fileId, {
-        method: "GET" // default, so we can ignore
+        method: "GET"
     }).then(response => {
             return response.json();
         }
