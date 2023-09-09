@@ -2,9 +2,6 @@ import base64
 import random
 import string
 
-import bcrypt
-import requests
-
 
 def generate_id():
     numbers = string.digits
