@@ -33,15 +33,3 @@ function copyShareToClipboard() {
     let shareUrl = document.getElementById("share_url").value;
     navigator.clipboard.writeText(shareUrl)
 }
-
-function countView(fileId) {
-    fetch("/count", {
-        method: "POST",
-        body: JSON.stringify({
-            objectId: fileId
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    });
-}

@@ -14,7 +14,6 @@
     <script src="../static/js/pdf.js"></script>
     {% endif %}
     <script src="../static/js/password.js"></script>
-    <script src="../static/js/helpers.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -134,7 +133,15 @@
 
 <script type="application/javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        countView('{{ file.file_id }}')
+        fetch("/count", {
+            method: "POST",
+            body: JSON.stringify({
+                objectId: "{{ file.file_id }}"
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
     }, false);
 </script>
 
