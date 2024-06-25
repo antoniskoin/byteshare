@@ -14,6 +14,7 @@
     <script src="../static/js/pdf.js"></script>
     {% endif %}
     <script src="../static/js/password.js"></script>
+    <script src="../static/js/utils.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -69,8 +70,7 @@
     </div>
 </div>
 
-<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow">
-    ByteShare &#169; 2023
+<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow" id="footer">
 </footer>
 
 <div class="modal fade" id="passwordModal" tabindex="-1">
@@ -89,7 +89,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a role="button" class="btn btn-primary shadow" id="passwordBtn" onclick="checkPassword('{{ file.file_id }}')">Unlock</a>
+                <a role="button" class="btn btn-primary shadow" id="passwordBtn"
+                   onclick="checkPassword('{{ file.file_id }}')">Unlock</a>
             </div>
         </div>
     </div>
@@ -143,6 +144,11 @@
             }
         });
     }, false);
+</script>
+
+
+<script>
+    setFooter();
 </script>
 
 </body>

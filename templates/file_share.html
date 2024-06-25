@@ -11,6 +11,7 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
     <script src="../static/js/password.js"></script>
+    <script src="../static/js/utils.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -75,9 +76,11 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input shadow" type="checkbox" role="switch"
                                id="flexSwitchCheckDefault" onchange="isSwitchChecked(this, 'password')">
-                        <label class="form-check-label text-light" for="flexSwitchCheckDefault">Password Protect File</label>
+                        <label class="form-check-label text-light" for="flexSwitchCheckDefault">Password Protect
+                            File</label>
                     </div>
-                    <input type="password" class="form-control mt-3 shadow" placeholder="Password" name="password" id="password" hidden>
+                    <input type="password" class="form-control mt-3 shadow" placeholder="Password" name="password"
+                           id="password" hidden>
                 </div>
                 <button class="btn btn-primary mt-3 shadow" type="submit" id="submit-button">Submit
                 </button>
@@ -86,9 +89,12 @@
     </div>
 </div>
 
-<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow">
-    ByteShare &#169; 2023
+<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow" id="footer">
 </footer>
+
+<script>
+    setFooter();
+</script>
 
 </body>
 </html>

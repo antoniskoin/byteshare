@@ -11,6 +11,7 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
     <script src="../static/js/helpers.js"></script>
+    <script src="../static/js/utils.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -94,7 +95,7 @@
                             </li>
                         </ul>
 
-                        <div class="btn-group pt-3 shadow">
+                        <div class="btn-group pt-3">
                             <button type="button" class="btn btn-primary dropdown-toggle shadow"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
@@ -185,9 +186,12 @@
     </div>
 </div>
 
-<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow">
-    ByteShare &#169; 2023
+<footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow" id="footer">
 </footer>
+
+<script>
+    setFooter();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
         integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA=="
