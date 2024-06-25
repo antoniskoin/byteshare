@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
+    <script src="../static/js/account.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-color: #121212">
 
@@ -50,6 +51,18 @@
         <img src="data:image/svg+xml;base64,{{ account_data.profile_image }}" class="card-img-top" alt="Profile Image">
         <div class="card-body text-center">
             <h5 class="card-title">{{ account_data.username }}</h5>
+            <div class="dropdown pt-2">
+                <button class="btn btn-dark border border-2 shadow" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    <div class="container-fluid d-flex align-items-center">
+                        <img src="../static/settings.svg" width="24px" alt="Settings">
+                    </div>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a type="button" class="dropdown-item" onclick="loadDeleteModal()">Delete Account</a>
+                </div>
+            </div>
             <hr>
             <a href="/logout" class="btn btn-danger shadow">Logout</a>
         </div>
@@ -59,6 +72,32 @@
 <footer class="d-flex justify-content-center mt-auto p-3 bg-dark text-white rounded-3 m-3 shadow">
     ByteShare &#169; 2023
 </footer>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your account?
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-danger shadow" onclick="deleteAccount('{{ account_data.username }}')">Yes,
+                    delete my account</a>
+                <button type="button" class="btn btn-success shadow" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function loadDeleteModal() {
+        let pdfModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        pdfModal.show();
+    }
+</script>
 
 </body>
 </html>
