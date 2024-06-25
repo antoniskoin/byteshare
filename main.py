@@ -1,22 +1,26 @@
+import os
 import pathlib
 from urllib.parse import urlparse
-from waitress import serve
+
 import bcrypt
 import pymongo
 from bson import ObjectId
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, make_response, session
+from waitress import serve
 
-from configuration import load_config
 from helpers.account import is_strong_password, generate_profile_image, hash_password
 from helpers.strings import generate_id
 
 app = Flask(__name__)
-config = load_config()
-app.secret_key = config["secret_key"]
-uri = f"mongodb+srv://{config['username']}:{config['password']}@cluster0.stl7rpk.mongodb.net/?retryWrites=true&w=majority"
+load_dotenv()
+
+app.secret_key = os.getenv("secret_key")
+uri = f"mongodb+srv://{os.getenv('db_username')}:{os.getenv('db_password')}@cluster0.stl7rpk.mongodb.net/?retryWrites=true&w=majority"
+print(uri)
 client = pymongo.MongoClient(uri)
-database = client.get_database(config["database"])
-records = database.get_collection(config["storage_collection"])
+database = client.get_database(os.getenv("database"))
+records = database.get_collection(os.getenv("storage_collection"))
 
 
 @app.route("/")
@@ -106,7 +110,7 @@ def check_password():
         return {"password_matches": False, "download_id": None}
 
     download_id = generate_id()
-    download_ids = database.get_collection(config["download_ids"])
+    download_ids = database.get_collection(os.getenv("download_ids"))
     download_ids.insert_one({"download_id": download_id})
 
     return {"password_matches": True, "download_id": download_id}
@@ -126,7 +130,7 @@ def download_file(file_id):
         if not download_id:
             return {"error": "A download ID is required to download a password protected file."}
 
-        download_ids = database.get_collection(config["download_ids"])
+        download_ids = database.get_collection(os.getenv("download_ids"))
         download_id_exists = download_ids.find_one({"download_id": download_id})
         if not download_id_exists:
             return {"error": "Download ID couldn't be found. Please try again."}
@@ -226,7 +230,7 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         password_confirmation = request.form.get("password_confirmation")
-        accounts = database.get_collection(config["account_collection"])
+        accounts = database.get_collection(os.getenv("account_collection"))
         user_found = accounts.find_one({"username": username})
         if user_found:
             message = "This username already exists."
@@ -261,7 +265,7 @@ def login():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
-        accounts = database.get_collection(config["account_collection"])
+        accounts = database.get_collection(os.getenv("account_collection"))
         account = accounts.find_one({"username": username})
         if not account:
             message = "This user doesn't exist."
@@ -280,7 +284,7 @@ def login():
 def profile():
     if "username" in session:
         username = session["username"]
-        accounts = database.get_collection(config["account_collection"])
+        accounts = database.get_collection(os.getenv("account_collection"))
         account = accounts.find_one({"username": username})
         profile_image = account["profile_image"].decode()
         account_data = {"username": username, "profile_image": profile_image}

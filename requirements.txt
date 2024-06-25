@@ -3,3 +3,4 @@ pymongo
 flask
 waitress
 bcrypt
+python-dotenv
